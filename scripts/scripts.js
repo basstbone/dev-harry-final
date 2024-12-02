@@ -1,8 +1,10 @@
 $(document).ready(function () {
+    const phoneInput = $("#contact");
+
     // Sample data
     const orderData = {
         customerName: "Jane Doe",
-        contact: "123-456-7890",
+        contact: "(123) 456-7890",
         deliveryDate: "2024-12-05T14:00",
         items: [
             { productName: "Wireless Mouse", quantity: 1 },
@@ -13,10 +15,39 @@ $(document).ready(function () {
 
     let order = { ...orderData }; // Clone the data for edits
 
+    // Automatically format phone input
+    phoneInput.on("input", function () {
+        let input = phoneInput.val();
+
+        // Remove non-digit characters
+        input = input.replace(/\D/g, "");
+
+        // Apply the formatting
+        if (input.length > 0) {
+            input = "(" + input.substring(0, 3);
+        }
+        if (input.length > 4) {
+            input = input.substring(0, 4) + ") " + input.substring(3, 6);
+        }
+        if (input.length > 9) {
+            input = input.substring(0, 9) + "-" + input.substring(6, 10);
+        }
+
+        // Set the formatted value back to the input
+        phoneInput.val(input);
+
+        // Validate length for complete number
+        if (input.length === 14) {
+            phoneInput.removeClass("is-invalid").addClass("is-valid");
+        } else {
+            phoneInput.removeClass("is-valid").addClass("is-invalid");
+        }
+    });
+
     // Load Order Data
     $("#loadOrder").click(function () {
         $("#customerName").val(order.customerName);
-        $("#contact").val(order.contact);
+        phoneInput.val(order.contact).trigger("input"); // Format phone number
         $("#deliveryDate").val(order.deliveryDate);
         $("#giftWrap").prop("checked", order.giftWrap);
 
@@ -35,8 +66,13 @@ $(document).ready(function () {
 
     // Save Order Data
     $("#saveOrder").click(function () {
+        if (phoneInput.hasClass("is-invalid")) {
+            alert("Please enter a valid phone number in the format (123) 456-7890.");
+            return; // Stop saving if invalid
+        }
+
         order.customerName = $("#customerName").val();
-        order.contact = $("#contact").val();
+        order.contact = phoneInput.val();
         order.deliveryDate = $("#deliveryDate").val();
         order.giftWrap = $("#giftWrap").is(":checked");
 
@@ -61,5 +97,6 @@ $(document).ready(function () {
     $("#clearOrder").click(function () {
         $("#orderForm")[0].reset();
         $("#itemsContainer").empty();
+        phoneInput.removeClass("is-valid is-invalid"); // Reset phone validation classes
     });
 });
