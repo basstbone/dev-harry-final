@@ -19,4 +19,4 @@ This app allows users to:
   - Datetime-local (for delivery date)
 
 ## Screenshot
-![Bad Interface Example](assets/bad_interface.png)
+![Bad Interface Example](pictures/bad_interface.png)
