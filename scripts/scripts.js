@@ -19,25 +19,29 @@ $(document).ready(function () {
     phoneInput.on("input", function () {
         let input = phoneInput.val();
 
-        // Remove non-digit characters
+        // Remove all non-digit characters
         input = input.replace(/\D/g, "");
 
-        // Apply the formatting
+        // Limit input to 10 digits
+        input = input.substring(0, 10);
+
+        // Apply formatting
+        let formatted = "";
         if (input.length > 0) {
-            input = "(" + input.substring(0, 3);
+            formatted += "(" + input.substring(0, 3);
         }
-        if (input.length > 4) {
-            input = input.substring(0, 4) + ") " + input.substring(3, 6);
+        if (input.length >= 4) {
+            formatted += ") " + input.substring(3, 6);
         }
-        if (input.length > 9) {
-            input = input.substring(0, 9) + "-" + input.substring(6, 10);
+        if (input.length >= 7) {
+            formatted += "-" + input.substring(6, 10);
         }
 
-        // Set the formatted value back to the input
-        phoneInput.val(input);
+        // Set the formatted value back to the input field
+        phoneInput.val(formatted);
 
         // Validate length for complete number
-        if (input.length === 14) {
+        if (formatted.length === 14) {
             phoneInput.removeClass("is-invalid").addClass("is-valid");
         } else {
             phoneInput.removeClass("is-valid").addClass("is-invalid");
@@ -55,10 +59,15 @@ $(document).ready(function () {
         itemsContainer.empty();
         order.items.forEach((item, index) => {
             itemsContainer.append(`
-                <div class="mb-3">
-                    <label class="form-label">Item ${index + 1}</label>
-                    <input type="text" class="form-control mb-2" value="${item.productName}" data-index="${index}" data-type="name">
-                    <input type="number" class="form-control" value="${item.quantity}" data-index="${index}" data-type="quantity">
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">Item ${index + 1}</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" value="${item.productName}" data-index="${index}" data-type="name">
+                    </div>
+                    <label class="col-sm-2 col-form-label">Quantity</label>
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" value="${item.quantity}" data-index="${index}" data-type="quantity">
+                    </div>
                 </div>
             `);
         });
