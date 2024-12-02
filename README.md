@@ -18,5 +18,5 @@ This app allows users to:
   - Tel (for phone number)
   - Datetime-local (for delivery date)
 
-## Screenshot
+## Bad Interface Example
 ![Bad Interface Example](pictures/bad_interface.jpg)
